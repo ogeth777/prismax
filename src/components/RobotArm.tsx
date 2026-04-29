@@ -293,11 +293,9 @@ export const RobotArm = () => {
         gl={{ 
           antialias: true, 
           powerPreference: "high-performance",
-          alpha: false,
-          stencil: false,
-          depth: true
         }}
       >
+        <color attach="background" args={["#1a1614"]} />
         <PerspectiveCamera makeDefault position={[25, 20, 25]} fov={30} />
         <OrbitControls 
           enablePan={false} 
@@ -308,7 +306,7 @@ export const RobotArm = () => {
         />
         
         <ambientLight intensity={0.2} />
-        <spotLight position={[30, 40, 30]} angle={0.2} penumbra={1} intensity={4000} castShadow shadow-mapSize={[512, 512]} />
+        <spotLight position={[30, 40, 30]} angle={0.2} penumbra={1} intensity={4000} castShadow shadow-mapSize={[1024, 1024]} />
         <pointLight position={[-20, 30, -20]} intensity={1000} color="#8c7355" />
         <directionalLight position={[10, 30, 10]} intensity={2} color="#f5ebe0" />
 

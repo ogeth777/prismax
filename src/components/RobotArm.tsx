@@ -334,9 +334,9 @@ export const RobotArm = () => {
         <gridHelper args={[100, 50, "#2a2421", "#1a1614"]} position={[0, 0, 0]} />
       </Canvas>
 
-      {/* MINIMAL HUD - SHIFTED LEFT WITHIN GRID */}
+      {/* MINIMAL HUD - HARD LEFT */}
       <div className="absolute inset-0 pointer-events-none select-none z-10">
-        <div className="max-w-7xl mx-auto px-10 pt-40 flex flex-col items-start">
+        <div className="w-full px-10 pt-40 flex flex-col items-start">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3 opacity-60">
               <div className="w-1.5 h-1.5 rounded-full bg-[#d4b99b] shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
@@ -364,9 +364,9 @@ export const RobotArm = () => {
         </div>
       </div>
 
-      {/* MINIMAL CONTROLS - SHIFTED LEFT WITHIN GRID */}
+      {/* MINIMAL CONTROLS - HARD LEFT */}
       <div className="absolute inset-x-0 bottom-24 pointer-events-none z-10">
-        <div className="max-w-7xl mx-auto px-10 flex flex-col items-start gap-6">
+        <div className="w-full px-10 flex flex-col items-start gap-6">
           <div className="flex gap-2">
             {['W', 'A', 'S', 'D', 'E', 'R'].map(key => (
               <kbd key={key} className={`w-10 h-10 flex items-center justify-center rounded-lg border font-mono text-[10px] transition-all ${activeKeys[`Key${key}`] ? 'bg-[#d4b99b] text-[#1a1614] border-[#d4b99b] shadow-[0_0_20px_rgba(212,185,155,0.4)]' : 'bg-[#1a1614]/60 text-[#d4b99b] border-[#d4b99b]/20'}`}>{key}</kbd>

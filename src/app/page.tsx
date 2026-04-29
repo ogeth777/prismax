@@ -24,7 +24,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#1a1614] text-[#f5ebe0] selection:bg-[#d4b99b]/20 overflow-hidden flex flex-col">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-[#1a1614]/90 backdrop-blur-xl border-b border-[#d4b99b]/10">
-        <div className="max-w-7xl mx-auto px-10 h-24 flex items-center justify-between">
+        <div className="w-full px-10 h-24 flex items-center justify-between">
           <div className="flex items-center gap-1">
             <span className="text-3xl font-light tracking-tighter serif text-[#d4b99b]">Prìsma</span>
             <span className="text-xs mt-1 text-[#d4b99b] opacity-60">(x)</span>
@@ -74,7 +74,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="fixed bottom-0 w-full py-10 z-50 pointer-events-none">
-        <div className="max-w-7xl mx-auto px-10 flex justify-between items-end opacity-40">
+        <div className="w-full px-10 flex justify-between items-end opacity-40">
           <div className="flex items-end gap-10">
             <div className="flex items-baseline gap-3">
               <span className="text-2xl font-light serif tracking-tighter text-[#d4b99b]">Prìsma(x)</span>

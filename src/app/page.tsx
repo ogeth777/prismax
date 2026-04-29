@@ -28,6 +28,7 @@ export default function Home() {
           <div className="flex items-center gap-1">
             <span className="text-3xl font-light tracking-tighter serif text-[#d4b99b]">Prìsma</span>
             <span className="text-xs mt-1 text-[#d4b99b] opacity-60">(x)</span>
+            <span className="text-[10px] ml-1 mt-1 font-mono uppercase tracking-widest text-[#d4b99b] opacity-40 italic">demo</span>
           </div>
           <div className="hidden md:flex items-center gap-12 text-[10px] font-mono uppercase tracking-[0.2em]">
             <a href="https://twitter.com/PrismaXai" target="_blank" className="text-[#f5ebe0]/60 hover:text-[#d4b99b] transition-colors">Twitter</a>

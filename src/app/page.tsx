@@ -71,16 +71,16 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Creator Label in bottom right */}
-        <div className="absolute bottom-10 right-10 z-50 pointer-events-auto select-none opacity-40 hover:opacity-100 transition-opacity">
+        {/* Creator Label in bottom right - HIGH VISIBILITY */}
+        <div className="absolute bottom-10 right-10 z-50 pointer-events-auto select-none group">
           <a 
             href="https://twitter.com/OG_Cryptooo" 
             target="_blank" 
-            className="flex flex-col items-end gap-1"
+            className="flex flex-col items-end gap-1.5"
           >
-            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-[#d4b99b]">Created by</span>
-            <span className="text-xs font-mono font-bold text-[#f5ebe0] uppercase tracking-widest">@OG_Cryptooo</span>
-            <span className="text-[7px] font-mono text-[#d4b99b]/50 uppercase tracking-tighter">DM for improvements & feedback</span>
+            <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#d4b99b] opacity-70 group-hover:opacity-100 transition-opacity">Created by</span>
+            <span className="text-sm font-mono font-black text-[#f5ebe0] uppercase tracking-[0.15em] drop-shadow-[0_0_15px_rgba(212,185,155,0.4)] group-hover:text-[#d4b99b] transition-all">@OG_Cryptooo</span>
+            <span className="text-[8px] font-mono text-[#d4b99b] font-bold uppercase tracking-tight bg-[#d4b99b]/10 px-2 py-0.5 rounded border border-[#d4b99b]/20 group-hover:bg-[#d4b99b]/20 transition-all">DM for improvements & feedback</span>
           </a>
         </div>
       </div>

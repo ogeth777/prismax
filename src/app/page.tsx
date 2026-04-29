@@ -71,27 +71,6 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="fixed bottom-0 w-full py-10 z-50 pointer-events-none">
-        <div className="w-full px-10 flex justify-between items-end opacity-40">
-          <div className="flex items-end gap-10">
-            <div className="flex items-baseline gap-3">
-              <span className="text-2xl font-light serif tracking-tighter text-[#d4b99b]">Prìsma(x)</span>
-              <span className="text-[7px] font-mono tracking-[0.3em] opacity-40 uppercase">v0.3.S</span>
-            </div>
-            <div className="flex flex-col gap-1 pointer-events-auto">
-              <span className="text-[7px] font-mono uppercase tracking-[0.3em] opacity-30">Lead Architect</span>
-              <a href="https://twitter.com/OG_Cryptooo" target="_blank" className="text-[9px] font-mono font-bold hover:text-[#d4b99b] transition-colors uppercase tracking-[0.2em]">@OG_Cryptooo</a>
-            </div>
-          </div>
-          <div className="flex gap-12 text-[9px] font-mono uppercase tracking-[0.3em] pointer-events-auto pb-1">
-            <a href="https://twitter.com/PrismaXai" target="_blank" className="hover:text-[#d4b99b] transition-colors">Twitter</a>
-            <a href="https://discord.gg/GCzJjBND" target="_blank" className="hover:text-[#d4b99b] transition-colors">Discord</a>
-            <a href="https://www.prismax.ai/" target="_blank" className="hover:text-[#d4b99b] transition-colors">Website</a>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

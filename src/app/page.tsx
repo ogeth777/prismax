@@ -74,19 +74,21 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="fixed bottom-0 w-full py-8 px-10 z-50 pointer-events-none">
-        <div className="max-w-7xl mx-auto flex justify-between items-center opacity-30">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-light serif tracking-tighter">Prìsma(x)</span>
-            <span className="text-[8px] font-mono ml-4 tracking-widest">STABLE_REL_03</span>
-            <div className="ml-8 flex items-center gap-2 pointer-events-auto">
-              <span className="text-[8px] font-mono uppercase tracking-widest opacity-50">Architect:</span>
-              <a href="https://twitter.com/OG_Cryptooo" target="_blank" className="text-[9px] font-mono font-bold hover:text-primary transition-colors uppercase tracking-widest opacity-80">@OG_Cryptooo</a>
+        <div className="max-w-7xl mx-auto flex justify-between items-end opacity-40">
+          <div className="flex items-end gap-6">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-light serif tracking-tighter text-[#d4b99b]">Prìsma(x)</span>
+              <span className="text-[7px] font-mono tracking-[0.2em] opacity-50 uppercase">v0.3.S</span>
+            </div>
+            <div className="flex flex-col gap-0.5 pointer-events-auto">
+              <span className="text-[7px] font-mono uppercase tracking-[0.2em] opacity-40">Lead Architect</span>
+              <a href="https://twitter.com/OG_Cryptooo" target="_blank" className="text-[9px] font-mono font-bold hover:text-[#d4b99b] transition-colors uppercase tracking-[0.1em]">@OG_Cryptooo</a>
             </div>
           </div>
-          <div className="flex gap-10 text-[9px] font-mono uppercase tracking-[0.2em] pointer-events-auto">
-            <a href="https://twitter.com/PrismaXai" target="_blank" className="hover:text-primary transition-colors">Twitter</a>
-            <a href="https://discord.gg/GCzJjBND" target="_blank" className="hover:text-primary transition-colors">Discord</a>
-            <a href="https://www.prismax.ai/" target="_blank" className="hover:text-primary transition-colors">Website</a>
+          <div className="flex gap-10 text-[9px] font-mono uppercase tracking-[0.2em] pointer-events-auto pb-1">
+            <a href="https://twitter.com/PrismaXai" target="_blank" className="hover:text-[#d4b99b] transition-colors">Twitter</a>
+            <a href="https://discord.gg/GCzJjBND" target="_blank" className="hover:text-[#d4b99b] transition-colors">Discord</a>
+            <a href="https://www.prismax.ai/" target="_blank" className="hover:text-[#d4b99b] transition-colors">Website</a>
           </div>
         </div>
       </footer>

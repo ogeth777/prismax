@@ -294,7 +294,6 @@ export const RobotArm = () => {
         style={{ background: '#1a1614' }}
       >
         <color attach="background" args={["#1a1614"]} />
-        <fog attach="fog" args={["#1a1614", 15, 60]} />
         <PerspectiveCamera makeDefault position={[25, 20, 25]} fov={30} />
         <OrbitControls 
           enablePan={false} 
@@ -304,10 +303,10 @@ export const RobotArm = () => {
           makeDefault
         />
         
-        <ambientLight intensity={0.2} />
-        <spotLight position={[30, 40, 30]} angle={0.2} penumbra={1} intensity={4000} castShadow shadow-mapSize={[1024, 1024]} />
-        <pointLight position={[-20, 30, -20]} intensity={1000} color="#8c7355" />
-        <directionalLight position={[10, 30, 10]} intensity={2} color="#f5ebe0" />
+        <ambientLight intensity={0.4} />
+        <spotLight position={[30, 40, 30]} angle={0.25} penumbra={1} intensity={6000} castShadow shadow-mapSize={[1024, 1024]} />
+        <pointLight position={[-20, 30, -20]} intensity={2000} color="#8c7355" />
+        <directionalLight position={[10, 30, 10]} intensity={3} color="#f5ebe0" />
 
         <RobotArmModel 
           pickedId={pickedId}
@@ -337,27 +336,27 @@ export const RobotArm = () => {
 
       {/* MINIMAL HUD */}
       <div className="absolute top-10 left-10 pointer-events-none select-none z-10">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3 opacity-60">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
-            <span className="text-[8px] font-mono text-primary font-bold tracking-[0.5em] uppercase">Core Protocol Active</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#d4b99b] shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
+            <span className="text-[8px] font-mono text-[#d4b99b] font-bold tracking-[0.4em] uppercase">Core Protocol Active</span>
           </div>
           
-          <div className="flex flex-col gap-1">
-            <h3 className="text-5xl font-light text-foreground tracking-tighter serif italic leading-none">Prìsma(x)</h3>
-            <p className="text-[9px] font-mono text-primary/60 uppercase tracking-[0.3em] ml-1">Embodied Intelligence // Deployment 03</p>
+          <div className="flex flex-col">
+            <h3 className="text-6xl font-light text-[#f5ebe0] tracking-tighter serif italic leading-tight">Prìsma(x)</h3>
+            <p className="text-[9px] font-mono text-[#d4b99b]/50 uppercase tracking-[0.3em] -mt-1">Embodied Intelligence // Deployment 03</p>
           </div>
 
-          <div className="flex gap-12 mt-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-[8px] font-mono text-foreground/40 uppercase tracking-widest">Cargo State</span>
-              <span className="text-xs font-bold font-mono text-primary tracking-tighter">
+          <div className="flex gap-10 mt-2">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-widest">Cargo State</span>
+              <span className="text-[11px] font-bold font-mono text-[#d4b99b] tracking-tighter">
                 {pickedId ? "» ENGAGED" : "» VACANT"}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[8px] font-mono text-foreground/40 uppercase tracking-widest">Hydraulics</span>
-              <span className="text-xs font-bold font-mono text-primary tracking-tighter">» NOMINAL</span>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-widest">Hydraulics</span>
+              <span className="text-[11px] font-bold font-mono text-[#d4b99b] tracking-tighter">» NOMINAL</span>
             </div>
           </div>
         </div>

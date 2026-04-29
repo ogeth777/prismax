@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
 // Constants for performance and stability
-const GRAB_DISTANCE = 3.5;
+const GRAB_DISTANCE = 1.2; // Reduced for realism
 const BOX_SIZE = 0.8;
 const FLOOR_Y = BOX_SIZE / 2;
 const ARM1_LENGTH = 6.5; 
@@ -239,8 +239,8 @@ const InteractiveBox = memo(({
       />
       {isNear && !pickedId && (
         <mesh>
-          <sphereGeometry args={[BOX_SIZE * 0.8, 16, 16]} />
-          <meshStandardMaterial color="#d4b99b" transparent opacity={0.2} wireframe />
+          <sphereGeometry args={[BOX_SIZE * 0.6, 16, 16]} />
+          <meshStandardMaterial color="#d4b99b" transparent opacity={0.4} wireframe />
         </mesh>
       )}
     </mesh>

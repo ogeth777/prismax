@@ -27,8 +27,8 @@ const RobotArmModel = memo(({
   gripperRef,
   controlsRef,
 }: { 
-  pickedId: string | null,
-  gripperRef: React.RefObject<THREE.Group>,
+  pickedId: string | null, 
+  gripperRef: React.RefObject<THREE.Group | null>,
   controlsRef: React.RefObject<{ [key: string]: boolean }>
 }) => {
   const baseRef = useRef<THREE.Group>(null);

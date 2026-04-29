@@ -286,16 +286,15 @@ export const RobotArm = () => {
   }, []);
 
   return (
-    <div className="w-full h-full relative bg-[#1a1614]">
+    <div className="w-full h-full relative" style={{ backgroundColor: '#1a1614' }}>
       <Canvas 
         shadows 
         dpr={[1, 2]} 
-        gl={{ 
-          antialias: true, 
-          powerPreference: "high-performance",
-        }}
+        gl={{ antialias: true }}
+        style={{ background: '#1a1614' }}
       >
         <color attach="background" args={["#1a1614"]} />
+        <fog attach="fog" args={["#1a1614", 15, 60]} />
         <PerspectiveCamera makeDefault position={[25, 20, 25]} fov={30} />
         <OrbitControls 
           enablePan={false} 

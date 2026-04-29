@@ -21,30 +21,36 @@ const RobotArm = dynamic(() => import('@/components/RobotArm').then(mod => mod.R
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#1a1614] text-foreground selection:bg-primary/20 overflow-hidden flex flex-col">
+    <main className="min-h-screen bg-[#1a1614] text-[#f5ebe0] selection:bg-[#d4b99b]/20 overflow-hidden flex flex-col">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-[#1a1614]/80 backdrop-blur-md">
+      <nav className="fixed top-0 w-full z-50 bg-[#1a1614]/90 backdrop-blur-xl border-b border-[#d4b99b]/10">
         <div className="max-w-7xl mx-auto px-10 h-24 flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <span className="text-3xl font-light tracking-tighter serif text-primary">Prìsma</span>
-            <span className="text-xs mt-1 text-primary opacity-60">(x)</span>
+            <span className="text-3xl font-light tracking-tighter serif text-[#d4b99b]">Prìsma</span>
+            <span className="text-xs mt-1 text-[#d4b99b] opacity-60">(x)</span>
           </div>
-          <div className="hidden md:flex items-center gap-12 text-[10px] font-mono uppercase tracking-[0.2em] opacity-60">
-            <a href="https://twitter.com/PrismaXai" target="_blank" className="hover:text-primary transition-colors">Twitter</a>
-            <a href="https://discord.gg/GCzJjBND" target="_blank" className="hover:text-primary transition-colors">Discord</a>
-            <a href="https://www.prismax.ai/" target="_blank" className="hover:text-primary transition-colors">Website</a>
+          <div className="hidden md:flex items-center gap-12 text-[10px] font-mono uppercase tracking-[0.2em]">
+            <a href="https://twitter.com/PrismaXai" target="_blank" className="text-[#f5ebe0]/60 hover:text-[#d4b99b] transition-colors">Twitter</a>
+            <a href="https://discord.gg/GCzJjBND" target="_blank" className="text-[#f5ebe0]/60 hover:text-[#d4b99b] transition-colors">Discord</a>
+            <a href="https://www.prismax.ai/" target="_blank" className="text-[#f5ebe0]/60 hover:text-[#d4b99b] transition-colors">Website</a>
           </div>
-          <a href="https://app.prismax.ai/" target="_blank" className="px-6 py-2.5 rounded-lg bg-primary text-bg-dark text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(212,185,155,0.3)]">
+          <a href="https://app.prismax.ai/" target="_blank" className="px-6 py-2.5 rounded-lg bg-[#d4b99b] text-[#1a1614] text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(212,185,155,0.3)]">
             Operate Real Robots
           </a>
         </div>
       </nav>
 
       {/* Main Content Area - FULL SCREEN 3D */}
-      <div className="relative w-full h-screen">
+      <div className="relative w-full h-screen bg-[#1a1614]">
         {/* The Robot stays in the center background */}
-        <div className="absolute inset-0 z-0 bg-[#1a1614]">
-          <RobotArm />
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <Suspense fallback={
+            <div className="w-full h-full flex items-center justify-center bg-[#1a1614]">
+              <div className="w-12 h-12 border-2 border-[#d4b99b]/20 border-t-[#d4b99b] rounded-full animate-spin" />
+            </div>
+          }>
+            <RobotArm />
+          </Suspense>
         </div>
 
         {/* Subtle overlay at the bottom */}

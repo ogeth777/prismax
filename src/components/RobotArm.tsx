@@ -334,43 +334,47 @@ export const RobotArm = () => {
         <gridHelper args={[100, 50, "#2a2421", "#1a1614"]} position={[0, 0, 0]} />
       </Canvas>
 
-      {/* MINIMAL HUD */}
-      <div className="absolute top-10 left-10 pointer-events-none select-none z-10">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3 opacity-60">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#d4b99b] shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
-            <span className="text-[8px] font-mono text-[#d4b99b] font-bold tracking-[0.4em] uppercase">Core Protocol Active</span>
-          </div>
-          
-          <div className="flex flex-col">
-            <h3 className="text-6xl font-light text-[#f5ebe0] tracking-tighter serif italic leading-tight">Prìsma(x)</h3>
-            <p className="text-[9px] font-mono text-[#d4b99b]/50 uppercase tracking-[0.3em] -mt-1">Embodied Intelligence // Deployment 03</p>
-          </div>
-
-          <div className="flex gap-10 mt-2">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-widest">Cargo State</span>
-              <span className="text-[11px] font-bold font-mono text-[#d4b99b] tracking-tighter">
-                {pickedId ? "» ENGAGED" : "» VACANT"}
-              </span>
+      {/* MINIMAL HUD - ALIGNED WITH NAV GRID */}
+      <div className="absolute inset-0 pointer-events-none select-none z-10">
+        <div className="max-w-7xl mx-auto px-10 pt-40 flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 opacity-60">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#d4b99b] shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
+              <span className="text-[8px] font-mono text-[#d4b99b] font-bold tracking-[0.4em] uppercase">Core Protocol Active</span>
             </div>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-widest">Hydraulics</span>
-              <span className="text-[11px] font-bold font-mono text-[#d4b99b] tracking-tighter">» NOMINAL</span>
+            
+            <div className="flex flex-col">
+              <h3 className="text-7xl font-light text-[#f5ebe0] tracking-tighter serif italic leading-[0.8]">Prìsma(x)</h3>
+              <p className="text-[10px] font-mono text-[#d4b99b]/40 uppercase tracking-[0.4em] mt-2">Embodied Intelligence // Deployment 03</p>
+            </div>
+
+            <div className="flex gap-12 mt-6">
+              <div className="flex flex-col gap-1">
+                <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-[0.2em]">Cargo State</span>
+                <span className="text-[10px] font-bold font-mono text-[#d4b99b] tracking-widest uppercase">
+                  {pickedId ? "» Engaged" : "» Vacant"}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[7px] font-mono text-[#f5ebe0]/30 uppercase tracking-[0.2em]">System Status</span>
+                <span className="text-[10px] font-bold font-mono text-[#d4b99b] tracking-widest uppercase">» Nominal</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* MINIMAL CONTROLS */}
-      <div className="absolute bottom-10 left-10 pointer-events-none flex flex-col gap-6 z-10">
-        <div className="flex gap-2">
-          {['W', 'A', 'S', 'D', 'E', 'R'].map(key => (
-            <kbd key={key} className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${activeKeys[`Key${key}`] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_20px_rgba(212,185,155,0.4)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>{key}</kbd>
-          ))}
-        </div>
-        <div className="flex items-center gap-4">
-          <kbd className={`px-8 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${activeKeys['KeyQ'] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_25px_rgba(212,185,155,0.5)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>Q: ACTIVATE GRIPPER</kbd>
+      {/* MINIMAL CONTROLS - ALIGNED WITH NAV GRID */}
+      <div className="absolute inset-x-0 bottom-24 pointer-events-none z-10">
+        <div className="max-w-7xl mx-auto px-10 flex flex-col gap-6">
+          <div className="flex gap-2">
+            {['W', 'A', 'S', 'D', 'E', 'R'].map(key => (
+              <kbd key={key} className={`w-10 h-10 flex items-center justify-center rounded-lg border font-mono text-[10px] transition-all ${activeKeys[`Key${key}`] ? 'bg-[#d4b99b] text-[#1a1614] border-[#d4b99b] shadow-[0_0_20px_rgba(212,185,155,0.4)]' : 'bg-[#1a1614]/60 text-[#d4b99b] border-[#d4b99b]/20'}`}>{key}</kbd>
+            ))}
+          </div>
+          <div className="flex items-center gap-4">
+            <kbd className={`px-8 h-10 flex items-center justify-center rounded-lg border font-mono text-[10px] transition-all uppercase tracking-widest ${activeKeys['KeyQ'] ? 'bg-[#d4b99b] text-[#1a1614] border-[#d4b99b] shadow-[0_0_25px_rgba(212,185,155,0.5)]' : 'bg-[#1a1614]/60 text-[#d4b99b] border-[#d4b99b]/20'}`}>Q: ACTIVATE GRIPPER</kbd>
+          </div>
         </div>
       </div>
     </div>

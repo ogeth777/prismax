@@ -70,6 +70,19 @@ export default function Home() {
               </a>
           </motion.div>
         </div>
+
+        {/* Creator Label in bottom right */}
+        <div className="absolute bottom-10 right-10 z-50 pointer-events-auto select-none opacity-40 hover:opacity-100 transition-opacity">
+          <a 
+            href="https://twitter.com/OG_Cryptooo" 
+            target="_blank" 
+            className="flex flex-col items-end gap-1"
+          >
+            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-[#d4b99b]">Created by</span>
+            <span className="text-xs font-mono font-bold text-[#f5ebe0] uppercase tracking-widest">@OG_Cryptooo</span>
+            <span className="text-[7px] font-mono text-[#d4b99b]/50 uppercase tracking-tighter">DM for improvements & feedback</span>
+          </a>
+        </div>
       </div>
     </main>
   );

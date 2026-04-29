@@ -72,6 +72,10 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <span className="text-lg font-light serif tracking-tighter">Prìsma(x)</span>
             <span className="text-[8px] font-mono ml-4 tracking-widest">STABLE_REL_03</span>
+            <div className="ml-8 flex items-center gap-2 pointer-events-auto">
+              <span className="text-[8px] font-mono uppercase tracking-widest opacity-50">Architect:</span>
+              <a href="https://twitter.com/OG_Cryptooo" target="_blank" className="text-[9px] font-mono font-bold hover:text-primary transition-colors uppercase tracking-widest opacity-80">@OG_Cryptooo</a>
+            </div>
           </div>
           <div className="flex gap-10 text-[9px] font-mono uppercase tracking-[0.2em] pointer-events-auto">
             <a href="https://twitter.com/PrismaXai" target="_blank" className="hover:text-primary transition-colors">Twitter</a>

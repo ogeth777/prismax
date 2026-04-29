@@ -1,9 +1,23 @@
 'use client';
 
-import React from 'react';
-import { RobotArm } from '@/components/RobotArm';
+import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Zap, ArrowRight } from 'lucide-react';
+
+const RobotArm = dynamic(() => import('@/components/RobotArm').then(mod => mod.RobotArm), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-bg-dark">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary opacity-40 animate-pulse">
+          Initializing Neural Link...
+        </span>
+      </div>
+    </div>
+  )
+});
 
 export default function Home() {
   return (

@@ -1,30 +1,35 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, ContactShadows, Float } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
-// Constants for absolute accessibility
-const GRAB_DISTANCE = 3.5; // Massive increase to make it super easy
+// Constants for performance and stability
+const GRAB_DISTANCE = 3.5;
 const BOX_SIZE = 0.8;
 const FLOOR_Y = BOX_SIZE / 2;
 const ARM1_LENGTH = 6.5; 
 const ARM2_LENGTH = 6.0; 
 
-const RobotArmModel = ({ 
-  controls, 
+// Reuse geometries and materials for performance
+const boxGeo = new THREE.BoxGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE);
+const fingerGeo = new THREE.BoxGeometry(0.2, 1.0, 0.5);
+const fingerPadGeo = new THREE.BoxGeometry(0.05, 0.8, 0.4);
+const jointGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.2, 16);
+const smallJointGeo = new THREE.CylinderGeometry(0.5, 0.5, 1.0, 16);
+const sensorGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.15, 16);
+
+// Memoized Model Component to prevent unnecessary re-renders
+const RobotArmModel = memo(({ 
   pickedId, 
   gripperRef,
-  rotations,
-  setRotations
+  controlsRef,
 }: { 
-  controls: { [key: string]: boolean }, 
   pickedId: string | null,
   gripperRef: React.RefObject<THREE.Group>,
-  rotations: { base: number, arm1: number, arm2: number },
-  setRotations: React.Dispatch<React.SetStateAction<{ base: number, arm1: number, arm2: number }>>
+  controlsRef: React.RefObject<{ [key: string]: boolean }>
 }) => {
   const baseRef = useRef<THREE.Group>(null);
   const arm1Ref = useRef<THREE.Group>(null);
@@ -32,30 +37,33 @@ const RobotArmModel = ({
   const fingerLeftRef = useRef<THREE.Group>(null);
   const fingerRightRef = useRef<THREE.Group>(null);
   const ghostRef = useRef<THREE.Group>(null);
+  
+  // Use a ref for rotations to avoid re-renders
+  const rotationsRef = useRef({
+    base: 0,
+    arm1: -Math.PI / 4,
+    arm2: Math.PI / 2,
+  });
 
   useFrame((state, delta) => {
     const speed = 2.0;
-    let newRotations = { ...rotations };
+    const controls = controlsRef.current || {};
 
-    if (controls['KeyA']) newRotations.base += speed * delta;
-    if (controls['KeyD']) newRotations.base -= speed * delta;
-    if (controls['KeyW']) newRotations.arm1 -= speed * delta;
-    if (controls['KeyS']) newRotations.arm1 += speed * delta;
-    if (controls['KeyE']) newRotations.arm2 -= speed * delta;
-    if (controls['KeyR']) newRotations.arm2 += speed * delta;
+    if (controls['KeyA']) rotationsRef.current.base += speed * delta;
+    if (controls['KeyD']) rotationsRef.current.base -= speed * delta;
+    if (controls['KeyW']) rotationsRef.current.arm1 -= speed * delta;
+    if (controls['KeyS']) rotationsRef.current.arm1 += speed * delta;
+    if (controls['KeyE']) rotationsRef.current.arm2 -= speed * delta;
+    if (controls['KeyR']) rotationsRef.current.arm2 += speed * delta;
 
-    // Optimized constraints for absolute floor reach
-    newRotations.arm1 = THREE.MathUtils.clamp(newRotations.arm1, -Math.PI / 1.05, 0.8);
-    newRotations.arm2 = THREE.MathUtils.clamp(newRotations.arm2, 0.02, Math.PI * 1.2);
+    rotationsRef.current.arm1 = THREE.MathUtils.clamp(rotationsRef.current.arm1, -Math.PI / 1.05, 0.8);
+    rotationsRef.current.arm2 = THREE.MathUtils.clamp(rotationsRef.current.arm2, 0.02, Math.PI * 1.2);
 
-    setRotations(newRotations);
-
-    if (baseRef.current) baseRef.current.rotation.y = newRotations.base;
-    if (arm1Ref.current) arm1Ref.current.rotation.z = newRotations.arm1;
-    if (arm2Ref.current) arm2Ref.current.rotation.z = newRotations.arm2;
+    if (baseRef.current) baseRef.current.rotation.y = rotationsRef.current.base;
+    if (arm1Ref.current) arm1Ref.current.rotation.z = rotationsRef.current.arm1;
+    if (arm2Ref.current) arm2Ref.current.rotation.z = rotationsRef.current.arm2;
 
     if (fingerLeftRef.current && fingerRightRef.current) {
-      // Realistic squeeze: when picked, fingers should be almost parallel or slightly angled in
       const targetFingerRot = pickedId ? 0.02 : 0.7;
       fingerLeftRef.current.rotation.z = THREE.MathUtils.lerp(fingerLeftRef.current.rotation.z, targetFingerRot, 0.15);
       fingerRightRef.current.rotation.z = THREE.MathUtils.lerp(fingerRightRef.current.rotation.z, -targetFingerRot, 0.15);
@@ -69,7 +77,6 @@ const RobotArmModel = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Ghost Prisma Ring */}
       <group ref={ghostRef} position={[0, 4, -4]} rotation={[Math.PI / 8, 0, 0]}>
         <mesh>
           <torusGeometry args={[6, 0.03, 16, 100]} />
@@ -77,80 +84,63 @@ const RobotArmModel = ({
         </mesh>
       </group>
 
-      {/* Industrial Base */}
       <mesh castShadow receiveShadow position={[0, 0.25, 0]}>
         <cylinderGeometry args={[2.5, 2.8, 0.5, 32]} />
         <meshStandardMaterial color="#1a1614" metalness={0.9} roughness={0.1} />
       </mesh>
 
       <group ref={baseRef} position={[0, 0.5, 0]}>
-        {/* Swivel Axis */}
         <mesh castShadow position={[0, 0.4, 0]}>
           <cylinderGeometry args={[1.4, 1.6, 0.8, 32]} />
           <meshStandardMaterial color="#2a2421" metalness={1} roughness={0.2} />
         </mesh>
 
-        {/* Joint 1 - Shoulder */}
         <group position={[0, 0.6, 0]} ref={arm1Ref}>
           <mesh position={[0, ARM1_LENGTH / 2, 0]} castShadow>
             <boxGeometry args={[0.6, ARM1_LENGTH, 0.6]} />
             <meshStandardMaterial color="#d4b99b" metalness={0.3} roughness={0.7} />
           </mesh>
           
-          <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.6, 0.6, 1.2, 16]} />
+          <mesh rotation={[Math.PI / 2, 0, 0]} geometry={jointGeo}>
             <meshStandardMaterial color="#8c7355" metalness={0.9} />
           </mesh>
 
-          {/* Joint 2 - Elbow */}
           <group position={[0, ARM1_LENGTH, 0]} ref={arm2Ref}>
             <mesh position={[0, ARM2_LENGTH / 2, 0]} castShadow>
               <boxGeometry args={[0.5, ARM2_LENGTH, 0.5]} />
               <meshStandardMaterial color="#d4b99b" metalness={0.3} roughness={0.7} />
             </mesh>
 
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.5, 0.5, 1.0, 16]} />
+            <mesh rotation={[Math.PI / 2, 0, 0]} geometry={smallJointGeo}>
               <meshStandardMaterial color="#8c7355" metalness={0.9} />
             </mesh>
 
-            {/* Heavy Duty Gripper */}
             <group position={[0, ARM2_LENGTH, 0]} ref={gripperRef}>
               <mesh castShadow>
                 <boxGeometry args={[1.0, 0.7, 1.0]} />
                 <meshStandardMaterial color="#1a1614" metalness={1} roughness={0.1} />
               </mesh>
               
-              {/* Palm / Sensor */}
-              <mesh position={[0, 0, 0.55]} rotation={[Math.PI / 2, 0, 0]}>
-                <cylinderGeometry args={[0.25, 0.25, 0.15, 16]} />
+              <mesh position={[0, 0, 0.55]} rotation={[Math.PI / 2, 0, 0]} geometry={sensorGeo}>
                 <meshStandardMaterial color="#d4b99b" emissive="#d4b99b" emissiveIntensity={3} />
               </mesh>
 
-              {/* THE HOLDING POINT (Invisible marker between fingers) */}
               <group position={[0, 0.8, 0]} name="gripper-tip" />
 
-              {/* Functional Fingers */}
               <group position={[0, 0.4, 0]}>
                 <group ref={fingerLeftRef} position={[-0.4, 0, 0]}>
-                  <mesh castShadow position={[0, 0.5, 0]}>
-                    <boxGeometry args={[0.2, 1.0, 0.5]} />
+                  <mesh castShadow position={[0, 0.5, 0]} geometry={fingerGeo}>
                     <meshStandardMaterial color="#2a2421" metalness={1} roughness={0.1} />
                   </mesh>
-                  {/* Grip Pad */}
-                  <mesh position={[0.12, 0.5, 0]}>
-                    <boxGeometry args={[0.05, 0.8, 0.4]} />
+                  <mesh position={[0.12, 0.5, 0]} geometry={fingerPadGeo}>
                     <meshStandardMaterial color="#8c7355" metalness={0.5} roughness={0.5} />
                   </mesh>
                 </group>
                 <group ref={fingerRightRef} position={[0.4, 0, 0]}>
-                  <mesh castShadow position={[0, 0.5, 0]}>
-                    <boxGeometry args={[0.2, 1.0, 0.5]} />
+                  <mesh castShadow position={[0, 0.5, 0]} geometry={fingerGeo}>
                     <meshStandardMaterial color="#2a2421" metalness={1} roughness={0.1} />
                   </mesh>
-                  {/* Grip Pad */}
-                  <mesh position={[-0.12, 0.5, 0]}>
-                    <boxGeometry args={[0.05, 0.8, 0.4]} />
+                  <mesh position={[-0.12, 0.5, 0]} geometry={fingerPadGeo}>
                     <meshStandardMaterial color="#8c7355" metalness={0.5} roughness={0.5} />
                   </mesh>
                 </group>
@@ -161,9 +151,11 @@ const RobotArmModel = ({
       </group>
     </group>
   );
-};
+});
 
-const InteractiveBox = ({ 
+RobotArmModel.displayName = 'RobotArmModel';
+
+const InteractiveBox = memo(({ 
   id, 
   initialPosition, 
   pickedId, 
@@ -195,7 +187,8 @@ const InteractiveBox = ({
     meshRef.current.getWorldPosition(boxWorldPos);
 
     const distance = gripperWorldPos.distanceTo(boxWorldPos);
-    setIsNear(distance < GRAB_DISTANCE);
+    const near = distance < GRAB_DISTANCE;
+    if (near !== isNear) setIsNear(near);
 
     if (pickedId === id) {
       meshRef.current.position.lerp(gripperWorldPos, 0.3);
@@ -216,7 +209,6 @@ const InteractiveBox = ({
       });
 
       if (meshRef.current.position.y > targetY) {
-        // Slow realistic descent (air resistance/smooth drop)
         meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, targetY, 0.05);
       } else {
         meshRef.current.position.y = targetY;
@@ -237,35 +229,31 @@ const InteractiveBox = ({
   }, [isNear, pickedId, id, setPickedId]);
 
   return (
-    <mesh ref={meshRef} position={initialPosition} castShadow receiveShadow>
-        <boxGeometry args={[BOX_SIZE, BOX_SIZE, BOX_SIZE]} />
-        <meshStandardMaterial 
-          color={pickedId === id ? "#d4b99b" : (isNear ? "#f5ebe0" : "#8c7355")} 
-          metalness={0.9} 
-          roughness={0.1}
-          emissive={pickedId === id ? "#d4b99b" : (isNear ? "#d4b99b" : "#000")}
-          emissiveIntensity={pickedId === id ? 1.5 : (isNear ? 0.8 : 0)}
-        />
-        {/* Visual Grab Indicator Sphere */}
-        {isNear && !pickedId && (
-          <mesh>
-            <sphereGeometry args={[BOX_SIZE * 0.8, 16, 16]} />
-            <meshStandardMaterial color="#d4b99b" transparent opacity={0.2} wireframe />
-          </mesh>
-        )}
-      </mesh>
+    <mesh ref={meshRef} position={initialPosition} castShadow receiveShadow geometry={boxGeo}>
+      <meshStandardMaterial 
+        color={pickedId === id ? "#d4b99b" : (isNear ? "#f5ebe0" : "#8c7355")} 
+        metalness={0.9} 
+        roughness={0.1}
+        emissive={pickedId === id ? "#d4b99b" : (isNear ? "#d4b99b" : "#000")}
+        emissiveIntensity={pickedId === id ? 1.5 : (isNear ? 0.8 : 0)}
+      />
+      {isNear && !pickedId && (
+        <mesh>
+          <sphereGeometry args={[BOX_SIZE * 0.8, 16, 16]} />
+          <meshStandardMaterial color="#d4b99b" transparent opacity={0.2} wireframe />
+        </mesh>
+      )}
+    </mesh>
   );
-};
+});
+
+InteractiveBox.displayName = 'InteractiveBox';
 
 export const RobotArm = () => {
-  const [controls, setControls] = useState<{ [key: string]: boolean }>({});
   const [pickedId, setPickedId] = useState<string | null>(null);
-  const [rotations, setRotations] = useState({
-    base: 0,
-    arm1: -Math.PI / 4,
-    arm2: Math.PI / 2,
-  });
+  const [activeKeys, setActiveKeys] = useState<{ [key: string]: boolean }>({});
   
+  const controlsRef = useRef<{ [key: string]: boolean }>({});
   const gripperRef = useRef<THREE.Group>(null);
   const allBoxesRef = useRef<Map<string, THREE.Mesh>>(new Map());
 
@@ -280,10 +268,14 @@ export const RobotArm = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      setControls(prev => ({ ...prev, [e.code]: true }));
+      controlsRef.current[e.code] = true;
+      setActiveKeys(prev => ({ ...prev, [e.code]: true }));
       if (e.code === 'KeyQ') window.dispatchEvent(new CustomEvent('grab-action'));
     };
-    const handleKeyUp = (e: KeyboardEvent) => setControls(prev => ({ ...prev, [e.code]: false }));
+    const handleKeyUp = (e: KeyboardEvent) => {
+      controlsRef.current[e.code] = false;
+      setActiveKeys(prev => ({ ...prev, [e.code]: false }));
+    };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
@@ -295,7 +287,17 @@ export const RobotArm = () => {
 
   return (
     <div className="w-full h-full relative bg-[#1a1614]">
-      <Canvas shadows dpr={[1, 2]} gl={{ antialias: true }}>
+      <Canvas 
+        shadows 
+        dpr={[1, 2]} 
+        gl={{ 
+          antialias: true, 
+          powerPreference: "high-performance",
+          alpha: false,
+          stencil: false,
+          depth: true
+        }}
+      >
         <PerspectiveCamera makeDefault position={[25, 20, 25]} fov={30} />
         <OrbitControls 
           enablePan={false} 
@@ -306,16 +308,14 @@ export const RobotArm = () => {
         />
         
         <ambientLight intensity={0.2} />
-        <spotLight position={[30, 40, 30]} angle={0.2} penumbra={1} intensity={4000} castShadow shadow-mapSize={[2048, 2048]} />
+        <spotLight position={[30, 40, 30]} angle={0.2} penumbra={1} intensity={4000} castShadow shadow-mapSize={[512, 512]} />
         <pointLight position={[-20, 30, -20]} intensity={1000} color="#8c7355" />
         <directionalLight position={[10, 30, 10]} intensity={2} color="#f5ebe0" />
 
         <RobotArmModel 
-          controls={controls} 
           pickedId={pickedId}
           gripperRef={gripperRef}
-          rotations={rotations}
-          setRotations={setRotations}
+          controlsRef={controlsRef}
         />
 
         {initialBoxes.map(box => (
@@ -329,7 +329,7 @@ export const RobotArm = () => {
         ))}
 
         <Environment preset="night" />
-        <ContactShadows position={[0, -0.01, 0]} opacity={0.6} scale={60} blur={2} far={15} />
+        <ContactShadows position={[0, -0.01, 0]} opacity={0.6} scale={60} blur={2.5} far={15} />
         
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
           <planeGeometry args={[150, 150]} />
@@ -339,7 +339,7 @@ export const RobotArm = () => {
       </Canvas>
 
       {/* MINIMAL HUD */}
-      <div className="absolute top-10 left-10 pointer-events-none select-none">
+      <div className="absolute top-10 left-10 pointer-events-none select-none z-10">
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3 opacity-60">
             <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(212,185,155,0.8)]" />
@@ -367,14 +367,14 @@ export const RobotArm = () => {
       </div>
 
       {/* MINIMAL CONTROLS */}
-      <div className="absolute bottom-10 left-10 pointer-events-none flex flex-col gap-6">
+      <div className="absolute bottom-10 left-10 pointer-events-none flex flex-col gap-6 z-10">
         <div className="flex gap-2">
           {['W', 'A', 'S', 'D', 'E', 'R'].map(key => (
-            <kbd key={key} className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${controls[`Key${key}`] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_20px_rgba(212,185,155,0.4)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>{key}</kbd>
+            <kbd key={key} className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${activeKeys[`Key${key}`] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_20px_rgba(212,185,155,0.4)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>{key}</kbd>
           ))}
         </div>
         <div className="flex items-center gap-4">
-          <kbd className={`px-8 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${controls['KeyQ'] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_25px_rgba(212,185,155,0.5)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>Q: ACTIVATE GRIPPER</kbd>
+          <kbd className={`px-8 h-10 flex items-center justify-center rounded-lg border-2 font-mono text-xs transition-all ${activeKeys['KeyQ'] ? 'bg-primary text-bg-dark border-primary shadow-[0_0_25px_rgba(212,185,155,0.5)]' : 'bg-bg-dark/60 text-primary border-primary/20'}`}>Q: ACTIVATE GRIPPER</kbd>
         </div>
       </div>
     </div>

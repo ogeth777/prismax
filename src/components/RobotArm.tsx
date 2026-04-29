@@ -344,7 +344,7 @@ export const RobotArm = () => {
             </div>
             
             <div className="flex flex-col items-start">
-              <h3 className="text-7xl font-light text-[#f5ebe0] tracking-tighter serif italic leading-[0.8]">Prìsma(x)</h3>
+              <h3 className="text-7xl font-light text-[#f5ebe0] tracking-tighter serif italic leading-[0.8]">Prìsmaxdemo</h3>
               <p className="text-[10px] font-mono text-[#d4b99b]/40 uppercase tracking-[0.4em] mt-2">Embodied Intelligence // Deployment 03</p>
             </div>
 
